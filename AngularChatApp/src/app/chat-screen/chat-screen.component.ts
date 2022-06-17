@@ -1,4 +1,16 @@
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, Input, OnInit } from '@angular/core';
+import {  addDoc,
+  collectionData,
+  doc,
+  Firestore,
+  getDoc,
+  orderBy,
+  query,
+  updateDoc,
+  where,} from '@angular/fire/firestore';
+import { collection } from 'firebase/firestore';
+import { Observable } from 'rxjs';
 import { chatData } from 'src/assets/chat-data';
 @Component({
   selector: 'app-chat-screen',
@@ -13,9 +25,10 @@ export class GroupMessagesComponent implements OnInit {
   @Input() loggedInUser:any;
   msgToSend:any='';
   selectedChatName='';
-  constructor() { }
+  constructor(public firestore: Firestore) { }
 
   ngOnInit(): void {
+    this.getChatMessages();
    let inbox = sessionStorage['inbox'];
    if(inbox && typeof inbox == 'string'){
     inbox = JSON.parse(inbox);
@@ -66,6 +79,15 @@ export class GroupMessagesComponent implements OnInit {
       return eachI.name == this.selectedChat.name;
      })
      console.log(updatedInbox);
+  }
+
+  getChatMessages(){
+    const ref = collection(this.firestore, 'oc-group-messages', 'oc-group-1','messages');
+    const queryAll = query(ref, orderBy('sentAt', 'asc'));
+    const data = collectionData(queryAll)
+    data.forEach(e => {
+      console.log(e)
+    });
   }
 
 }
