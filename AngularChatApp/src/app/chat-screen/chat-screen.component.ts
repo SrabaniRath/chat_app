@@ -2,6 +2,7 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, Input, OnInit } from '@angular/core';
 import {  addDoc,
   collectionData,
+  WriteBatch,
   doc,
   Firestore,
   getDoc,
@@ -10,7 +11,7 @@ import {  addDoc,
   updateDoc,
   setDoc,
   where,} from '@angular/fire/firestore';
-import { collection } from 'firebase/firestore';
+import { collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { concatMap, map, Observable } from 'rxjs';
 import { chatData } from 'src/assets/chat-data';
 @Component({
@@ -29,9 +30,12 @@ export class GroupMessagesComponent implements OnInit {
   constructor(public firestore: Firestore) { }
 
   ngOnInit(): void {
+    this.getAllUsers();
+    // this.getChatMessages();
     // this.getmyGroups();
     // this.createChat();
-    this.createGroup();
+    // this.createGroup();
+    // this.deleteGroup();
    let inbox = sessionStorage['inbox'];
    if(inbox && typeof inbox == 'string'){
     inbox = JSON.parse(inbox);
@@ -84,26 +88,25 @@ export class GroupMessagesComponent implements OnInit {
      console.log(updatedInbox);
   }
 
-  // getChatMessages(){
-  //   const ref = collection(this.firestore, 'oc-group-messages', 'oc-group-1','messages');
-  //   const queryAll = query(ref, orderBy('sentAt', 'asc'));
-  //   const data = collectionData(queryAll)
-  //   data.forEach(e => {
-  //     console.log(e)
-  //   });
-  // }
+  getChatMessages(){
+    const ref = collection(this.firestore, 'oc-group-messages', 'oc-group-1','messages');
+    const queryAll = query(ref, orderBy('sentAt', 'asc'));
+    const data = collectionData(queryAll)
+    data.forEach(e => {
+      console.log(e)
+    });
+  }
 
   getmyGroups() {
     const ref = collection(this.firestore, 'oc-group');
         const myQuery = query(
           ref,
-          where('members', 'array-contains','user-id-3')
+          where('members', 'array-contains','user-id-3')  //userid to be passed
         );
         const data = collectionData(myQuery)
         data.forEach(e => {
           console.log(e)
         })
-
   }
 
   createChat(){
@@ -117,16 +120,36 @@ export class GroupMessagesComponent implements OnInit {
     let timestamp = Date.now();
     let userArray = ['uid1','uid2','uid3'];
     const ref = collection(this.firestore, 'oc-group');
-    const refdoc = doc(ref,'oc-group-5')
+    const refdoc = doc(ref,'oc-group-5')  //username and timstamp
     setDoc(refdoc,{
-      name: 'oc-grp',
-      type: 'private',
+      name: 'oc-grp', //dyanmic
+      type: 'private',  // privat public
       createdAt: timestamp,
-      createdBy: 'admin',
-      groupId: '',
+      createdBy: 'admin',   //logged in username
+      groupId: '', //username and timstamp
       members: userArray,
     },)
   }
+
+  // deleteGroup(){
+  //   const refGroup = collection(this.firestore, 'oc-group');
+  //   const refdocGrp = doc(refGroup,'oc-group-5')
+  //   deleteDoc(refdocGrp)
+  // }
+
+  //getAllUser
+  getAllUsers() {
+    const ref = collection(this.firestore, 'oc-user');
+        const querryAll = query(ref);
+        const data = collectionData(querryAll)
+        data.forEach(e =>{
+          console.log(e)
+        })
+  }
+
+  //update group
+  // updateGroup
+
 
 
 }
