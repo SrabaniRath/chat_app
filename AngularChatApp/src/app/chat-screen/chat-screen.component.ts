@@ -10,7 +10,7 @@ import {  addDoc,
   updateDoc,
   where,} from '@angular/fire/firestore';
 import { collection } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { concatMap, map, Observable } from 'rxjs';
 import { chatData } from 'src/assets/chat-data';
 @Component({
   selector: 'app-chat-screen',
@@ -28,7 +28,7 @@ export class GroupMessagesComponent implements OnInit {
   constructor(public firestore: Firestore) { }
 
   ngOnInit(): void {
-    this.getChatMessages();
+    this.getmyGroups();
    let inbox = sessionStorage['inbox'];
    if(inbox && typeof inbox == 'string'){
     inbox = JSON.parse(inbox);
@@ -81,13 +81,27 @@ export class GroupMessagesComponent implements OnInit {
      console.log(updatedInbox);
   }
 
-  getChatMessages(){
-    const ref = collection(this.firestore, 'oc-group-messages', 'oc-group-1','messages');
-    const queryAll = query(ref, orderBy('sentAt', 'asc'));
-    const data = collectionData(queryAll)
-    data.forEach(e => {
-      console.log(e)
-    });
+  // getChatMessages(){
+  //   const ref = collection(this.firestore, 'oc-group-messages', 'oc-group-1','messages');
+  //   const queryAll = query(ref, orderBy('sentAt', 'asc'));
+  //   const data = collectionData(queryAll)
+  //   data.forEach(e => {
+  //     console.log(e)
+  //   });
+  // }
+
+  getmyGroups() {
+    const ref = collection(this.firestore, 'oc-group');
+        const myQuery = query(
+          ref,
+          where('members', 'array-contains','user-id-3')
+        );
+        const data = collectionData(myQuery)
+        data.forEach(e => {
+          console.log(e)
+        })
+
   }
+
 
 }
