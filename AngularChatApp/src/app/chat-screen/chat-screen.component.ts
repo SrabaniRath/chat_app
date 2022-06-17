@@ -8,6 +8,7 @@ import {  addDoc,
   orderBy,
   query,
   updateDoc,
+  setDoc,
   where,} from '@angular/fire/firestore';
 import { collection } from 'firebase/firestore';
 import { concatMap, map, Observable } from 'rxjs';
@@ -28,7 +29,9 @@ export class GroupMessagesComponent implements OnInit {
   constructor(public firestore: Firestore) { }
 
   ngOnInit(): void {
-    this.getmyGroups();
+    // this.getmyGroups();
+    // this.createChat();
+    this.createGroup();
    let inbox = sessionStorage['inbox'];
    if(inbox && typeof inbox == 'string'){
     inbox = JSON.parse(inbox);
@@ -101,6 +104,28 @@ export class GroupMessagesComponent implements OnInit {
           console.log(e)
         })
 
+  }
+
+  createChat(){
+    const ref = collection(this.firestore, 'oc-group-messages','oc-group-2','messages');
+    addDoc(ref,{
+      name: 'oc-grp'
+    })
+  }
+
+  createGroup(){
+    let timestamp = Date.now();
+    let userArray = ['uid1','uid2','uid3'];
+    const ref = collection(this.firestore, 'oc-group');
+    const refdoc = doc(ref,'oc-group-5')
+    setDoc(refdoc,{
+      name: 'oc-grp',
+      type: 'private',
+      createdAt: timestamp,
+      createdBy: 'admin',
+      groupId: '',
+      members: userArray,
+    },)
   }
 
 
