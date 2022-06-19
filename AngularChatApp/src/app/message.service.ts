@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+// import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 @Injectable({
@@ -7,11 +7,11 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class MessageService {
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor() { }
 
 
   getMessageLists() { 
-     return this.firestore.collection('oc-group-messages').doc('oc-group-1').collection('message').snapshotChanges();
+     //return this.firestore.collection('oc-group-messages').doc('oc-group-1').collection('message').snapshotChanges();
     //return this.firestore.collection('oc-group-messages').snapshotChanges();
   }
 }
