@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 // import { AngularFirestore } from '@angular/fire/compat/firestore';
 // import { map, of } from 'rxjs';
 // import { chatData } from 'src/assets/chat-data';

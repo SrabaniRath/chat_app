@@ -2,43 +2,71 @@
     max-width: 1170px;
     margin: auto;
 }
-.incoming_msg{
+
+.incoming_msg {
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
 }
+
 img {
     max-width: 100%;
 }
 
-.fa{
-    margin-right:1rem;
+.fa {
+    margin-right: 1rem;
     min-width: 1.5rem;
 }
-.search-class{
+
+.add-css {
+    color: white;
+}
+
+.search-class {
     width: 247px;
     border: none;
     border-bottom: 1px solid lightgrey;
 }
-.search-class_model{
-    width: 247px;
-    border: none;
-    border-bottom: 1px solid lightgrey;   
+
+.search-class_model {
+    font-weight: 600 !important;
+    border: none !important;
+    outline: none !important;
+    margin-left: 7px !important;
 }
 
-.selected-suggestion{
-    background-color: red !important; 
+.delete-icon-chip {
+    cursor: pointer;
+
+}
+
+.btn-link {
+    border: none !important
+}
+
+.selected-suggestion {
+    background-color: #05728f !important;
     color: white;
 }
+
+.modal-header {
+    background: #05728f !important;
+    color: white !important;
+}
+
+.close {
+    color: white !important
+}
+
 .autocomplete-items {
     position: absolute;
-  border: 1px solid #d4d4d4;
-  border-radius: 4px;
-  margin-top: 15px;
-  top: 100%;
-  left: 0;
-  right: 50%;
+    border: 1px solid #d4d4d4;
+    border-radius: 4px;
+    left: 0;
+    width: 100%;
+    z-index: 2;
 }
+
 .autocomplete-items div {
     padding: 10px;
     cursor: pointer;
@@ -47,7 +75,7 @@ img {
 }
 
 .autocomplete-items div:hover {
-    background-color: #a695957a; 
+    background-color: #a695957a;
 }
 
 .inbox_people {
@@ -68,10 +96,10 @@ img {
     margin: 20px 0 0;
 }
 
-.channel_heading {
-    float: left;
-    width: 40%;
-}
+// .channel_heading {
+//     float: left;
+//     width: 40%;
+// }
 
 .srch_bar {
     display: inline-block;
@@ -79,10 +107,36 @@ img {
     width: 60%;
 }
 
+.main-heading-css {
+    display: flex;
+    justify-content: space-around;
+}
+
+.heading-size {
+    font-size: 24px;
+}
+
+.btn-position {
+    position: relative;
+    left: 5rem;
+    top: 7px;
+}
+
+.chips-input-container {
+    display: inline-flex;
+}
+
+.btn-submit {
+    color: white;
+    background: #05728f;
+}
+
 .headind_srch {
     padding: 10px 29px 10px 20px;
     overflow: hidden;
     border-bottom: 1px solid #c4c4c4;
+    background: #05728f;
+    color: white;
 }
 
 .channel_heading h4 {
@@ -148,11 +202,12 @@ img {
     border-bottom: 1px solid #c4c4c4;
     margin: 0;
     padding: 18px 16px 10px;
-    
-    &:hover, &.active{
+
+    &:hover,
+    &.active {
         background: #f2eded;
         cursor: pointer;
-        
+
     }
 }
 
@@ -169,14 +224,16 @@ img {
     display: inline-block;
     width: 6%;
 }
-.outgoing_msg{
+
+.outgoing_msg {
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
-.outgoing_msg_img{
+
+.outgoing_msg_img {
     display: inline-block;
-    width: 6%; 
+    width: 6%;
     margin-right: 1rem;
 }
 
@@ -273,4 +330,30 @@ img {
 
 .message {
     list-style-type: none;
+}
+
+.main-heading-style{
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    justify-content: space-between;
+}
+
+.border-box{
+    border:1px solid lightgrey;
+   padding: 0;
+   margin-bottom: 1rem;
+}
+.border-box .fa-video-camera{
+    border-right:1px solid lightgrey;
+    padding:5px;
+}
+.img-width{
+    width: 5%;
+}
+.img-width-css{
+    max-width: 56% !important;
+}
+.active{
+    text-underline-position: below;
+    border-bottom:1px solid #05728f;
 }

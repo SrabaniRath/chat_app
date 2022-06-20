@@ -8,11 +8,11 @@
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="channel_heading">
-                        <p>
-                            <span class="h4">
+                        <div class="main-heading-css">
+                            <span class="heading-size">
                                 Chats
                             </span>
-                            <span class="">
+                            <span class="btn-position">
                                 <!-- <div class="dropdown">
                                     <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
                                    <i class="fa fa-ellipsis-v"></i></button>
@@ -21,9 +21,9 @@
                                      
                                     </ul>
                                   </div> -->
-                                <button class="btn btn-link" type="button" data-toggle="modal"
+                                <button class="btn-link" type="button" data-toggle="modal"
                                     data-target="#newGrpModal">
-                                    <i class="fa fa-plus">Add group</i>
+                                    <i class="fa fa-plus add-css">Add group</i>
                                 </button>
                             </span>
                             <!-- <span>
@@ -46,7 +46,7 @@
                                     <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''" (click)="selectUser(user)">{{ user }}</div>
                                   </div>
                             </span> -->
-                        </p>
+                        </div>
                     </div>
                 </div>
                 <!--left panel-->
@@ -71,6 +71,32 @@
             <div class="mesgs">
                 <div class="msg_history" *ngIf="!selectedGroupName">
 
+                </div>
+                <div class="main-heading-style" *ngIf="selectedGroupName">
+                    <span>
+                        <i class="fa fa-user-circle" aria-hidden="true" title="Profile"></i>
+                    </span>
+                    <span>
+                        <label>{{loggedInUser}}</label>
+                    </span>
+                    <span class="active">
+                        <label title="Chat">
+                            Chat
+                        </label>
+                    </span>
+                  <span title="Files">
+                   <label>Files</label>
+                  </span>
+                  <span class="border-box">
+                    <i class="fa fa-video-camera" aria-hidden="true" title="Video Call"></i>
+                    <i class="fa fa-phone" aria-hidden="true" title="Audio Call"></i>
+                  </span>
+                  <span class="img-width">
+                    <img class="img-width-css" src="../../assets/img_292248.png" title="Screen Share"/>
+                  </span>
+                  <span>
+                    <i class="fa fa-user-plus" aria-hidden="true" title="Add People"></i>
+                  </span>
                 </div>
                 <div class="msg_history" *ngIf="selectedGroupName">
                     <li class="message" *ngFor="let eachMsg of chatHistory">
@@ -150,16 +176,28 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <label>
+                        Group Name:
+                    </label>
                     <input type="text" name="newGroupName" class="form-control" placeholder="Enter group name"
                         [(ngModel)]="newGroupName" autocomplete="off" />
                 </div>
                 <span>
+                    <label>
+                        Add Participant:
+                    </label>
+                    
+                </span>
+                <br/>
+                <span>
+                    <div class="chips-input-container form-control">
                     <div class="user-chip" *ngFor="let user of userSelects">
                         {{user}}
                         <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
                       </div>
-                    <input  class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
+                    <input class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
                     (click)="suggest()">
+                    </div>
                     <!-- <datalist id="userLists">
                         <option *ngFor="let user of userLists" [value]="user">
                        </option>
@@ -170,7 +208,7 @@
                 </span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-submit" data-dismiss="modal" (click)="addNewGroup()"
+                <button type="button" class="btn btn-submit" data-dismiss="modal" (click)="addNewGroup()"
                     [disabled]="!searchControl && (!newGroupName || (newGroupName && !newGroupName.trim()))">Add</button>
             </div>
         </div>
