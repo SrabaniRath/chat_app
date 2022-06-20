@@ -221,4 +221,18 @@ export class GroupMessagesComponent implements OnInit {
     })
   }
 
+    //update group
+    updateGroup(){
+      const groupRef = collection(this.fireStore,'oc-group')
+      const groupDocRef = doc(groupRef,'oc-group-1')  //group name which has to be upadated is to be passed here
+      updateDoc(groupDocRef,{
+      members: ['user-id-1','user-id-2']  //new user array to be passed....
+      })
+    }
+
+    deleteGroup(){
+      const groupRef = collection(this.fireStore, 'oc-group')
+      const groupDocRef = doc(groupRef, 'oc-group-7') //group name has to be passed which has to be deleted
+      deleteDoc(groupDocRef);
+    }
 }
