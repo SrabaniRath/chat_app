@@ -30,6 +30,7 @@ export class GroupMessagesComponent implements OnInit {
   constructor(public firestore: Firestore) { }
 
   ngOnInit(): void {
+    // this.updateGroup();
     this.getAllUsers();
     // this.getChatMessages();
     // this.getmyGroups();
@@ -148,7 +149,13 @@ export class GroupMessagesComponent implements OnInit {
   }
 
   //update group
-  // updateGroup
+  updateGroup(){
+    const groupRef = collection(this.firestore,'oc-group')
+    const groupDocRef = doc(groupRef,'oc-group-1')
+    updateDoc(groupDocRef,{
+      members: ['user-id-1','user-id-2']
+    })
+  }
 
 
 
