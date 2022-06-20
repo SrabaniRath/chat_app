@@ -26,13 +26,26 @@
                                     <i class="fa fa-plus">Add group</i>
                                 </button>
                             </span>
-                            <span>
-                                <input list="userLists" name="users">
+                            <!-- <span>
+                                <input  class="search-class" list="userLists" name="users" type="search"  placeholder="Search for users and start a chat" [(ngModel)]="searchControl"
+                                >
                                 <datalist id="userLists">
                                     <option *ngFor="let user of userLists" [value]="user">
                                    </option>
                                 </datalist>
-                            </span>
+                            </span> -->
+                            <!-- <span>
+                                <div class="user-chip" *ngFor="let user of userSelects">
+                                    {{user}}
+                                    <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                                  </div>
+                                <input  class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
+                                (click)="suggest()">
+                               
+                                <div class="autocomplete-items" *ngIf="show">
+                                    <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''" (click)="selectUser(user)">{{ user }}</div>
+                                  </div>
+                            </span> -->
                         </p>
                     </div>
                 </div>
@@ -140,10 +153,25 @@
                     <input type="text" name="newGroupName" class="form-control" placeholder="Enter group name"
                         [(ngModel)]="newGroupName" autocomplete="off" />
                 </div>
+                <span>
+                    <div class="user-chip" *ngFor="let user of userSelects">
+                        {{user}}
+                        <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                      </div>
+                    <input  class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
+                    (click)="suggest()">
+                    <!-- <datalist id="userLists">
+                        <option *ngFor="let user of userLists" [value]="user">
+                       </option>
+                    </datalist> -->
+                    <div class="autocomplete-items" *ngIf="show">
+                        <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''" (click)="selectUser(user)">{{ user }}</div>
+                      </div>
+                </span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success btn-submit" data-dismiss="modal" (click)="addNewGroup()"
-                    [disabled]="!newGroupName || (newGroupName && !newGroupName.trim())">Submit</button>
+                    [disabled]="!searchControl && (!newGroupName || (newGroupName && !newGroupName.trim()))">Add</button>
             </div>
         </div>
 
