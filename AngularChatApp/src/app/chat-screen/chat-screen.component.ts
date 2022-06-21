@@ -19,6 +19,7 @@ import {
 import { collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { combineLatest, concatMap, from, map, Observable, startWith, tap } from 'rxjs';
 
+
 @Component({
   selector: 'app-chat-screen',
   templateUrl: './chat-screen.component.html',
@@ -29,7 +30,7 @@ export class GroupMessagesComponent implements OnInit {
 
   chatInbox: any = [];
   selectedChat: any;
-  @Input() loggedInUser: any;
+   loggedInUser: any;
   msgToSend: any = '';
   selectedGroupName = '';
   chatHistory: any = [];
@@ -37,13 +38,18 @@ export class GroupMessagesComponent implements OnInit {
   userLists: any = [];
   chatGroupsName: any = [];
   searchControl: any = '';
+ 
+  @Input() set currentUser(value: any) {
+    this.loggedInUser = value;
+    this.getmyGroups();
+}
   constructor(private messageService: MessageService, private fireStore: Firestore) { }
 
   ngOnInit(): void {
 
-    this.getmyGroups();
+   // this.getmyGroups();
     this.getAllUsers();
-    //this.createChat();
+
   }
   /**
    * 
@@ -155,7 +161,12 @@ export class GroupMessagesComponent implements OnInit {
       where('members', 'array-contains', this.loggedInUser)  //userid to be passed
     );
     const data = collectionData(myQuery);
-    data.subscribe((res: any) => { this.chatGroups = res || [] })
+    data.subscribe((res: any) => { 
+       this.chatGroups = res || [];
+        if(res && res.length && this.selectedGroupName){
+          this.setSelectGroup(this.chatGroups.find((grop:any)=>grop.name == this.selectedGroupName));
+        }
+    });
     data.pipe(
       tap(console.log),
       map((rec: any) => rec.map((eachGrp: any) => eachGrp['name']))).subscribe((res: any) => {
@@ -216,7 +227,7 @@ export class GroupMessagesComponent implements OnInit {
   addNewGroup() {
     //console.log(this.userSelects);
     let timestamp = Date.now();
-    let userArray = [...this.userSelects,this.loggedInUser];
+    let userArray = [...this.userSelects, this.loggedInUser];
     const ref = collection(this.fireStore, 'oc-group');
     const refdoc = doc(ref, this.newGroupName)  //username and timstamp
     setDoc(refdoc, {
@@ -228,19 +239,28 @@ export class GroupMessagesComponent implements OnInit {
       members: userArray,
     })
   }
-
+  removeMember: any = [];
   //update group
-  updateGroup(user: any) {
+  updateGroup(member: any) {
+    //this.removeMember =this.currentGrpMembers.filter((eachGrpMember:any)=>eachGrpMember!==member);
+    console.log(this.removeMember)
     const groupRef = collection(this.fireStore, 'oc-group')
     const groupDocRef = doc(groupRef, this.selectedGroupName)  //group name which has to be upadated is to be passed here
-    from(updateDoc(groupDocRef, {
-      members: { ...user }//['user-id-1','user-id-2']  //new user array to be passed....
-    }))
+    updateDoc(groupDocRef, {
+      members: this.currentGrpMembers.filter((eachGrpMember: any) => eachGrpMember !== member)  //new user array to be passed....
+    }).then(() => this.getmyGroups());
   }
 
-  deleteGroup() {
-    const groupRef = collection(this.fireStore, 'oc-group')
-    const groupDocRef = doc(groupRef, this.selectedGroupName) //group name has to be passed which has to be deleted
-    deleteDoc(groupDocRef);
+  deleteGroup(selectedGrpName: any) {
+     const match= this.chatGroups.find((eachGrp:any)=>eachGrp.name == selectedGrpName);
+     if(match && match.createdBy == this.loggedInUser){
+      const groupRef = collection(this.fireStore, 'oc-group')
+      const groupDocRef = doc(groupRef, selectedGrpName) //group name has to be passed which has to be deleted
+      deleteDoc(groupDocRef).then(()=>this.getmyGroups());
+     }else{
+      alert("msg")
+     }
+
+   
   }
 }
