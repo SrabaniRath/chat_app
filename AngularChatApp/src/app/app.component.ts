@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,37 +7,37 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'AngularChatApp';
-  item$: Observable<any>;
   username = '';
-  constructor(firestore: Firestore) {
-    const colec = collection(firestore, 'items');
-    this.item$ = collectionData(colec);
+  constructor() {
+
   }
 
   ngOnInit(): void {
+
     if (!sessionStorage['username']) {
-     this.toggleModal();
+      this.toggleModal();
     } else {
       this.username = sessionStorage['username'];
-      const backDrop= document.querySelector('.modal-backdrop');
-      if(backDrop?.classList.contains('in')){
+      const backDrop = document.querySelector('.modal-backdrop');
+      if (backDrop?.classList.contains('in')) {
         backDrop.classList.remove('in')
-       
+
       }
     }
+
   }
 
   toggleModal() {
     const modal = document.getElementById('loginModal');
-    const backDrop= document.querySelector('.modal-backdrop');
+    const backDrop = document.querySelector('.modal-backdrop');
     if (modal?.classList.contains('in')) {
-      if(backDrop?.classList.contains('in')){
+      if (backDrop?.classList.contains('in')) {
         backDrop.classList.remove('in')
-       
+
       }
       modal.classList.remove('in')
       modal.style.display = 'none';
-    } else if(modal && !modal.classList.contains('in')) {
+    } else if (modal && !modal.classList.contains('in')) {
       modal.classList.add('in')
       modal.style.display = 'block';
     }
@@ -49,7 +48,10 @@ export class AppComponent implements OnInit {
   joinChat() {
     console.log("print the name", this.username);
     this.toggleModal();
-    sessionStorage.setItem('username',this.username);
-    
+    sessionStorage.setItem('username', this.username);
+
   }
+
+
+
 }

@@ -1,72 +1,137 @@
 <div class="container">
     <h3 class=" text-center">
-       Stream Messaging
-       <span>{{loggedInUser}}</span>
+        Stream Messaging
+        <span>{{loggedInUser}}</span>
     </h3>
     <div class="messaging">
         <div class="inbox_msg">
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="channel_heading">
-                        <h4>Chats</h4>
+                        <div class="main-heading-css">
+                            <span class="heading-size">
+                                Chats
+                            </span>
+                            <span class="btn-position">
+                                <button class="btn-link" type="button" data-toggle="modal" data-target="#newGrpModal">
+                                    <i class="fa fa-plus add-css">Add group</i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
+                <!--left panel-->
                 <div class="inbox_chat">
                     <div class="channels">
-                        <div class="chat_list" *ngFor="let eachChat of chatInbox " [class.active]="eachChat.name == selectedChatName" (click)="loadMessages(eachChat)">
+                        <div class="chat_list" *ngFor="let eachGrpNm of chatGroupsName "
+                            [class.active]="eachGrpNm == selectedGroupName" (click)="setSelectGroup(eachGrpNm)">
                             <div class="chat_people">
                                 <div class="chat_ib">
                                     <h5>
-                                        <i *ngIf="eachChat.type==='group'" class="fa fa-users" aria-hidden="true"></i>
-                                        <i *ngIf="eachChat.type!='group'" class="fa fa-user" aria-hidden="true"></i>
-                                        {{eachChat.name}}
+                                        <i class="fa fa-users" aria-hidden="true"></i>
+                                        {{eachGrpNm}}
+                                        <span class="icon-position" (click)="deleteGroup(eachGrpNm)">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true" title="delete group"></i>
+                                        </span>
 
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--left panel-->
             </div>
             <div class="mesgs">
-                <div class="msg_history" *ngIf="!selectedChat">
-                     
-                </div>
-                <div class="msg_history" *ngIf="selectedChat">
-                    <li class="message" *ngFor="let eachMsg of selectedChat.chats">
+                <div class="msg_history" *ngIf="!selectedGroupName">
 
-                        <div class="incoming_msg " *ngIf="eachMsg.sender !== loggedInUser">
+                </div>
+                <div class="main-heading-style" *ngIf="selectedGroupName">
+                    <span>
+                        <i class="fa fa-user-circle" aria-hidden="true" title="Profile"></i>
+                    </span>
+                    <span>
+                        <label>{{selectedGroupName}}</label>
+                    </span>
+                    <span class="active">
+                        <label title="Chat">
+                            Chat
+                        </label>
+                    </span>
+                    <span title="Files">
+                        <label>Files</label>
+                    </span>
+                    <span class="border-box">
+                        <i class="fa fa-video-camera" aria-hidden="true" title="Video Call"></i>
+                        <i class="fa fa-phone" aria-hidden="true" title="Audio Call"></i>
+                    </span>
+                    <span class="img-width">
+                        <img class="img-width-css" src="../../assets/img_292248.png" title="Screen Share" />
+                    </span>
+                    <span class="add-icon-btn">
+
+                        <div class="dropdown">
+                            <button class="btn" type="button" data-target="#addPeople" data-toggle="dropdown"><i
+                                    class="fa fa-user-plus" aria-hidden="true" title="Add People"></i></button>
+                            <ul class="dropdown-menu">
+                                <li *ngFor="let member of currentGrpMembers">
+                                    {{member}}
+                                    <span (click)="updateGroup(member)" class="delete-icon-chip">&#10006;</span>
+                                </li>
+                                <button class="btn-link add-people-style" type="button" data-toggle="modal" data-target="#addParticipants">
+                                    <i class="fa fa-plus add-people">Add People</i>
+                                </button>
+                            </ul>
+                            
+                        </div>
+                    </span>
+                </div>
+                <div class="msg_history" *ngIf="selectedGroupName">
+                    <li class="message" *ngFor="let eachMsg of chatHistory">
+
+                        <div class="incoming_msg " *ngIf="eachMsg.sentBy !== loggedInUser">
                             <div class="incoming_msg_img">
                                 <img src="https://i.imgur.com/k2PZLZa.png" alt="User avatar" />
                             </div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
                                     <label>
-                                        {{eachMsg.sender}}
+                                        {{eachMsg.sentBy}}
                                     </label>
                                     <br />
                                     <p>
-                                        {{eachMsg.content}}
+                                        {{eachMsg.messageText}}
                                     </p>
 
                                 </div>
+                                <p>
+                                    <small>{{eachMsg.sentAt | date:'medium'}}</small>
+                                </p>
                             </div>
                         </div>
 
 
-                        <div class="outgoing_msg" *ngIf="eachMsg.sender == loggedInUser">
-                            <div class="outgoing_msg_img">
-                                <img src="https://i.imgur.com/k2PZLZa.png" alt="User avatar" />
+                        <div class="outgoing_msg" *ngIf="eachMsg.sentBy == loggedInUser">
+                            <div class="header">
+                                <div class="outgoing_msg_img">
+                                    <img src="https://i.imgur.com/k2PZLZa.png" alt="User avatar" />
+                                </div>
+                                <div class="sent_msg">
+                                    <label>
+                                        {{eachMsg.sentBy}}
+                                    </label>
+                                    <br />
+                                    <p>
+                                        {{eachMsg.messageText}}
+                                    </p>
+
+                                </div>
                             </div>
-                            <div class="sent_msg">
-                                <label>
-                                    {{eachMsg.sender}}
-                                </label>
-                                <br />
-                                <p>
-                                    {{eachMsg.content}}
-                                </p>
-                            </div>
+
+                            <p>
+                                <small>{{eachMsg.sentAt | date:'medium'}}</small>
+                            </p>
                         </div>
 
                     </li>
@@ -75,12 +140,108 @@
                     <form class="input_msg_write">
                         <input type="text" class="write_msg" placeholder="Type a message" name="newMessage"
                             autocomplete="off" [(ngModel)]="msgToSend" />
-                        <button class="msg_send_btn" type="button" [disabled]="!msgToSend || (msgToSend && !msgToSend.trim())">
+                        <button class="msg_send_btn" type="button"
+                            [disabled]="!msgToSend || (msgToSend && !msgToSend.trim())">
                             <i class="fa fa-paper-plane-o" aria-hidden="true" (click)="sendMessage()"></i>
                         </button>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!--add new group  modal-->
+
+<div role="dialog" id="newGrpModal" class="login modal fade">
+    <!-- <h2 class="title">Login to Chat</h2> -->
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-center">Add New Group</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>
+                        Group Name:
+                    </label>
+                    <input type="text" name="newGroupName" class="form-control" placeholder="Enter group name"
+                        [(ngModel)]="newGroupName" autocomplete="off" />
+                </div>
+                <span>
+                    <label>
+                        Add Participant:
+                    </label>
+
+                </span>
+                <br />
+                <span>
+                    <div class="chips-input-container form-control">
+                        <div class="user-chip" *ngFor="let user of userSelects">
+                            {{user}}
+                            <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                        </div>
+                        <input class="search-class_model" type="text" placeholder="select Participant"
+                            [(ngModel)]="searchControl" (click)="suggest()">
+                    </div>
+                    <div class="autocomplete-items" *ngIf="show">
+                        <div *ngFor="let user of userLists" [class.hide]="user == loggedInUser" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''"
+                            (click)="selectUser(user)">{{ user }}</div>
+                    </div>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit" data-dismiss="modal" (click)="addNewGroup()"
+                    [disabled]="!searchControl && (!newGroupName || (newGroupName && !newGroupName.trim()))">Add</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--add people to group-->
+<div role="dialog" id="addParticipants" class="login modal fade">
+    <!-- <h2 class="title">Login to Chat</h2> -->
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-center">Add People</h4>
+            </div>
+            <div class="modal-body">
+                <span>
+                    <label>
+                        Add Participant:
+                    </label>
+
+                </span>
+                <br />
+                <span>
+                    <div class="chips-input-container form-control">
+                        <div class="user-chip" *ngFor="let user of userSelects">
+                            {{user}}
+                            <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                        </div>
+                        <input class="search-class_model" type="text" placeholder="select Participant"
+                            [(ngModel)]="searchControl" (click)="suggest()">
+                    </div>
+                    <div class="autocomplete-items" *ngIf="show">
+                        <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''"
+                            (click)="selectUser(user)">{{ user }}</div>
+                    </div>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit" data-dismiss="modal"
+                    [disabled]="searchControl" (click)="addPeople()">Add</button>
+            </div>
+        </div>
+
     </div>
 </div>
