@@ -63,7 +63,7 @@
                         <label>Files</label>
                     </span>
                     <span class="border-box">
-                        <i class="fa fa-video-camera" aria-hidden="true" title="Video Call"></i>
+                        <i class="fa fa-video-camera" aria-hidden="true" title="Video Call" (click)="videoCallStrt()" ></i>
                         <i class="fa fa-phone" aria-hidden="true" title="Audio Call"></i>
                     </span>
                     <span class="img-width">
@@ -244,4 +244,8 @@
         </div>
 
     </div>
+</div>
+
+<div class="video-call-dialog" *ngIf="videoCallInProgress">
+    <app-jitsi [flag]="videoCallInProgress"></app-jitsi>
 </div>

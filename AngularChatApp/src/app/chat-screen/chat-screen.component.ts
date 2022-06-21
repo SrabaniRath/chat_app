@@ -39,7 +39,7 @@ export class GroupMessagesComponent implements OnInit {
   userLists: any = [];
   chatGroupsName: any = [];
   searchControl: any = '';
- 
+  videoCallInProgress:any=false;
   @Input() set currentUser(value: any) {
     this.loggedInUser = value;
     this.getmyGroups();
@@ -275,5 +275,10 @@ export class GroupMessagesComponent implements OnInit {
     updateDoc(groupDocRef, {
       members: [...this.currentGrpMembers,this.userLists.find((eachGrpMember: any) => eachGrpMember == this.userSelects)]  //new user array to be passed....
     }).then(() => this.getAllUsers());
+  }
+
+
+  videoCallStrt(){
+    this.videoCallInProgress=true;
   }
 }

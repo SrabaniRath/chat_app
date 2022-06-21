@@ -8,13 +8,15 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
 import { GroupMessagesComponent } from './chat-screen/chat-screen.component';
+import { JitsiComponent } from './jitsi/jitsi.component';
 // import { AngularFireModule } from "@angular/fire/compat";
 // import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GroupMessagesComponent
+    GroupMessagesComponent,
+    JitsiComponent
   ],
   imports: [
     BrowserModule,
