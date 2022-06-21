@@ -13,54 +13,29 @@
                                 Chats
                             </span>
                             <span class="btn-position">
-                                <!-- <div class="dropdown">
-                                    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-                                   <i class="fa fa-ellipsis-v"></i></button>
-                                    <ul class="dropdown-menu">
-                                      <li><a href="#">Add New Group</a></li>
-                                     
-                                    </ul>
-                                  </div> -->
-                                <button class="btn-link" type="button" data-toggle="modal"
-                                    data-target="#newGrpModal">
+                                <button class="btn-link" type="button" data-toggle="modal" data-target="#newGrpModal">
                                     <i class="fa fa-plus add-css">Add group</i>
                                 </button>
                             </span>
-                            <!-- <span>
-                                <input  class="search-class" list="userLists" name="users" type="search"  placeholder="Search for users and start a chat" [(ngModel)]="searchControl"
-                                >
-                                <datalist id="userLists">
-                                    <option *ngFor="let user of userLists" [value]="user">
-                                   </option>
-                                </datalist>
-                            </span> -->
-                            <!-- <span>
-                                <div class="user-chip" *ngFor="let user of userSelects">
-                                    {{user}}
-                                    <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
-                                  </div>
-                                <input  class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
-                                (click)="suggest()">
-                               
-                                <div class="autocomplete-items" *ngIf="show">
-                                    <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''" (click)="selectUser(user)">{{ user }}</div>
-                                  </div>
-                            </span> -->
                         </div>
                     </div>
                 </div>
                 <!--left panel-->
                 <div class="inbox_chat">
                     <div class="channels">
-                        <div class="chat_list" *ngFor="let eachGrpNm of chatGroups "
+                        <div class="chat_list" *ngFor="let eachGrpNm of chatGroupsName "
                             [class.active]="eachGrpNm == selectedGroupName" (click)="setSelectGroup(eachGrpNm)">
                             <div class="chat_people">
                                 <div class="chat_ib">
                                     <h5>
                                         <i class="fa fa-users" aria-hidden="true"></i>
                                         {{eachGrpNm}}
+                                        <span class="icon-position" (click)="deleteGroup()">
+                                            <i class="fa fa-ellipsis-v" aria-hidden="true" title="delete group"></i>
+                                        </span>
 
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
@@ -77,26 +52,40 @@
                         <i class="fa fa-user-circle" aria-hidden="true" title="Profile"></i>
                     </span>
                     <span>
-                        <label>{{loggedInUser}}</label>
+                        <label>{{selectedGroupName}}</label>
                     </span>
                     <span class="active">
                         <label title="Chat">
                             Chat
                         </label>
                     </span>
-                  <span title="Files">
-                   <label>Files</label>
-                  </span>
-                  <span class="border-box">
-                    <i class="fa fa-video-camera" aria-hidden="true" title="Video Call"></i>
-                    <i class="fa fa-phone" aria-hidden="true" title="Audio Call"></i>
-                  </span>
-                  <span class="img-width">
-                    <img class="img-width-css" src="../../assets/img_292248.png" title="Screen Share"/>
-                  </span>
-                  <span>
-                    <i class="fa fa-user-plus" aria-hidden="true" title="Add People"></i>
-                  </span>
+                    <span title="Files">
+                        <label>Files</label>
+                    </span>
+                    <span class="border-box">
+                        <i class="fa fa-video-camera" aria-hidden="true" title="Video Call"></i>
+                        <i class="fa fa-phone" aria-hidden="true" title="Audio Call"></i>
+                    </span>
+                    <span class="img-width">
+                        <img class="img-width-css" src="../../assets/img_292248.png" title="Screen Share" />
+                    </span>
+                    <span class="add-icon-btn">
+
+                        <div class="dropdown">
+                            <button class="btn" type="button" data-target="#addPeople" data-toggle="dropdown"><i
+                                    class="fa fa-user-plus" aria-hidden="true" title="Add People"></i></button>
+                            <ul class="dropdown-menu">
+                                <li *ngFor="let member of currentGrpMembers">
+                                    {{member}}
+                                    <span (click)="updateGroup(member)" class="delete-icon-chip">&#10006;</span>
+                                </li>
+                                <button class="btn-link add-people-style" type="button" data-toggle="modal" data-target="#addParticipants">
+                                    <i class="fa fa-plus add-people">Add People</i>
+                                </button>
+                            </ul>
+                            
+                        </div>
+                    </span>
                 </div>
                 <div class="msg_history" *ngIf="selectedGroupName">
                     <li class="message" *ngFor="let eachMsg of chatHistory">
@@ -186,30 +175,71 @@
                     <label>
                         Add Participant:
                     </label>
-                    
+
                 </span>
-                <br/>
+                <br />
                 <span>
                     <div class="chips-input-container form-control">
-                    <div class="user-chip" *ngFor="let user of userSelects">
-                        {{user}}
-                        <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
-                      </div>
-                    <input class="search-class_model" type="text"  placeholder="select Participant" [(ngModel)]="searchControl"
-                    (click)="suggest()">
+                        <div class="user-chip" *ngFor="let user of userSelects">
+                            {{user}}
+                            <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                        </div>
+                        <input class="search-class_model" type="text" placeholder="select Participant"
+                            [(ngModel)]="searchControl" (click)="suggest()">
                     </div>
-                    <!-- <datalist id="userLists">
-                        <option *ngFor="let user of userLists" [value]="user">
-                       </option>
-                    </datalist> -->
                     <div class="autocomplete-items" *ngIf="show">
-                        <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''" (click)="selectUser(user)">{{ user }}</div>
-                      </div>
+                        <div *ngFor="let user of userLists" [class.hide]="user == loggedInUser" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''"
+                            (click)="selectUser(user)">{{ user }}</div>
+                    </div>
                 </span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-submit" data-dismiss="modal" (click)="addNewGroup()"
                     [disabled]="!searchControl && (!newGroupName || (newGroupName && !newGroupName.trim()))">Add</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--add people to group-->
+<div role="dialog" id="addParticipants" class="login modal fade">
+    <!-- <h2 class="title">Login to Chat</h2> -->
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-center">Add People</h4>
+            </div>
+            <div class="modal-body">
+                <span>
+                    <label>
+                        Add Participant:
+                    </label>
+
+                </span>
+                <br />
+                <span>
+                    <div class="chips-input-container form-control">
+                        <div class="user-chip" *ngFor="let user of userSelects">
+                            {{user}}
+                            <span (click)="deleteSelects(user)" class="delete-icon-chip">&#10006;</span>
+                        </div>
+                        <input class="search-class_model" type="text" placeholder="select Participant"
+                            [(ngModel)]="searchControl" (click)="suggest()">
+                    </div>
+                    <div class="autocomplete-items" *ngIf="show">
+                        <div *ngFor="let user of userLists" [ngClass]="isSelected(user) ? 'selected-suggestion' : ''"
+                            (click)="selectUser(user)">{{ user }}</div>
+                    </div>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit" data-dismiss="modal"
+                    [disabled]="searchControl">Add</button>
             </div>
         </div>
 

@@ -37,6 +37,7 @@ img {
 
 .delete-icon-chip {
     cursor: pointer;
+    margin-left: 2rem;
 
 }
 
@@ -356,4 +357,25 @@ img {
 .active{
     text-underline-position: below;
     border-bottom:1px solid #05728f;
+}
+.icon-position{
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    left: 48px;
+}
+.dropdown-menu{
+    left:-56px !important; 
+    min-width: 110px;
+    padding: 8px;
+}
+.add-people-style{
+    margin-top: 1rem;
+}
+.add-people{
+    width: 100%;
+}
+
+.hide{
+    display: none;
 }

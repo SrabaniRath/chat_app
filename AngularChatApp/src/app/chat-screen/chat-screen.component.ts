@@ -17,7 +17,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
-import { combineLatest, concatMap, map, Observable, startWith } from 'rxjs';
+import { combineLatest, concatMap, from, map, Observable, startWith, tap } from 'rxjs';
 
 @Component({
   selector: 'app-chat-screen',
@@ -35,8 +35,8 @@ export class GroupMessagesComponent implements OnInit {
   chatHistory: any = [];
   newGroupName: any = '';
   userLists: any = [];
-  chatGroups: any = [];
-  searchControl:any='';
+  chatGroupsName: any = [];
+  searchControl: any = '';
   constructor(private messageService: MessageService, private fireStore: Firestore) { }
 
   ngOnInit(): void {
@@ -49,25 +49,30 @@ export class GroupMessagesComponent implements OnInit {
    * 
    * left panel selection handler
    */
+  currentGrpMembers: any = [];
   setSelectGroup(e: any) {
     this.selectedGroupName = e;
+    const match = this.chatGroups.find((eachGrp: any) => eachGrp.name == e);
+    this.currentGrpMembers = match ? match.members : [];
+
+    console.log(this.currentGrpMembers)
     this.getChatMessages(e);
   }
 
   sendMessage() {
     let timestamp = Date.now();
     //this.updateMessages(this.msgToSend);
-    const ref = collection(this.fireStore, 'oc-group-messages',`${this.selectedGroupName}`, 'messages');
+    const ref = collection(this.fireStore, 'oc-group-messages', `${this.selectedGroupName}`, 'messages');
     addDoc(ref, {
-      sentAt:timestamp,
-      messageText:this.msgToSend,
-      sentBy:this.loggedInUser
+      sentAt: timestamp,
+      messageText: this.msgToSend,
+      sentBy: this.loggedInUser
     })
     this.msgToSend = '';
   }
-/**
- * @ not required
- */
+  /**
+   * @ not required
+   */
   // updateMessages(msg: any) {
 
   //   const updatedInbox = this.chatInbox.map((eachInbox: any) => {
@@ -142,6 +147,7 @@ export class GroupMessagesComponent implements OnInit {
   /**
    * fetching groups
    */
+  chatGroups: any = [];
   getmyGroups() {
     const ref = collection(this.fireStore, 'oc-group');
     const myQuery = query(
@@ -149,11 +155,13 @@ export class GroupMessagesComponent implements OnInit {
       where('members', 'array-contains', this.loggedInUser)  //userid to be passed
     );
     const data = collectionData(myQuery);
-    data.subscribe(console.log)
-    data.pipe(map((rec: any) => rec.map((eachGrp: any) => eachGrp['name']))).subscribe((res: any) => {
-      this.chatGroups = res || [];
-      //console.log(res);
-    })
+    data.subscribe((res: any) => { this.chatGroups = res || [] })
+    data.pipe(
+      tap(console.log),
+      map((rec: any) => rec.map((eachGrp: any) => eachGrp['name']))).subscribe((res: any) => {
+        this.chatGroupsName = res || [];
+        //console.log(res);
+      })
   }
 
   /**
@@ -161,7 +169,7 @@ export class GroupMessagesComponent implements OnInit {
    */
   // createChat(user:any) {
   //   console.log(user);
-  //   const ref = collection(this.fireStore, 'oc-group-messages',`${ this.chatGroups}`, 'messages');
+  //   const ref = collection(this.fireStore, 'oc-group-messages',`${ this.chatGroupsName}`, 'messages');
   //   addDoc(ref, {
   //     name: 'oc-grp'
   //   })
@@ -176,31 +184,31 @@ export class GroupMessagesComponent implements OnInit {
     const data = collectionData(querryAll);
     data.subscribe(console.log)
     data.pipe(
-      map((userData:any)=>userData.map((rec:any)=>rec['uid']))
-    ).subscribe((res:any)=>{
-      this.userLists=res || [];
-       console.log(res);
+      map((userData: any) => userData.map((rec: any) => rec['uid']))
+    ).subscribe((res: any) => {
+      this.userLists = res || [];
+      console.log(res);
     })
 
   }
-  userSelects:any=[];
+  userSelects: any = [];
   show: boolean = false;
   suggest() {
     this.show = true;
   }
 
-  isSelected(user:any) {
-   return this.userSelects.findIndex((item:any) => item === user) > -1 ? true : false;
-  }
- 
-  selectUser(user:any) {
-    this.userSelects.find((item:any) => item === user) ? (this.userSelects = this.userSelects.filter((item:any) => item !== user)) :this.userSelects.push(user);
-    this.show=false;
+  isSelected(user: any) {
+    return this.userSelects.findIndex((item: any) => item === user) > -1 ? true : false;
   }
 
-  deleteSelects(user:any) {
-    this.userSelects = this.userSelects.filter((item:any) => item!== user);
-  
+  selectUser(user: any) {
+    this.userSelects.find((item: any) => item === user) ? (this.userSelects = this.userSelects.filter((item: any) => item !== user)) : this.userSelects.push(user);
+    this.show = false;
+  }
+
+  deleteSelects(user: any) {
+    this.userSelects = this.userSelects.filter((item: any) => item !== user);
+
   }
   /**
    * create a new group
@@ -208,7 +216,7 @@ export class GroupMessagesComponent implements OnInit {
   addNewGroup() {
     //console.log(this.userSelects);
     let timestamp = Date.now();
-    let userArray=this.userSelects;
+    let userArray = [...this.userSelects,this.loggedInUser];
     const ref = collection(this.fireStore, 'oc-group');
     const refdoc = doc(ref, this.newGroupName)  //username and timstamp
     setDoc(refdoc, {
@@ -216,23 +224,23 @@ export class GroupMessagesComponent implements OnInit {
       type: 'private',  // privat public
       createdAt: timestamp,
       createdBy: this.loggedInUser,   //logged in username
-      groupId:this.newGroupName, //username and timstamp
+      groupId: this.newGroupName, //username and timstamp
       members: userArray,
     })
   }
 
-    //update group
-    updateGroup(){
-      const groupRef = collection(this.fireStore,'oc-group')
-      const groupDocRef = doc(groupRef,'oc-group-1')  //group name which has to be upadated is to be passed here
-      updateDoc(groupDocRef,{
-      members: ['user-id-1','user-id-2']  //new user array to be passed....
-      })
-    }
+  //update group
+  updateGroup(user: any) {
+    const groupRef = collection(this.fireStore, 'oc-group')
+    const groupDocRef = doc(groupRef, this.selectedGroupName)  //group name which has to be upadated is to be passed here
+    from(updateDoc(groupDocRef, {
+      members: { ...user }//['user-id-1','user-id-2']  //new user array to be passed....
+    }))
+  }
 
-    deleteGroup(){
-      const groupRef = collection(this.fireStore, 'oc-group')
-      const groupDocRef = doc(groupRef, 'oc-group-7') //group name has to be passed which has to be deleted
-      deleteDoc(groupDocRef);
-    }
+  deleteGroup() {
+    const groupRef = collection(this.fireStore, 'oc-group')
+    const groupDocRef = doc(groupRef, this.selectedGroupName) //group name has to be passed which has to be deleted
+    deleteDoc(groupDocRef);
+  }
 }
