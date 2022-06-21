@@ -20,6 +20,7 @@ import { collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { combineLatest, concatMap, from, map, Observable, startWith, tap } from 'rxjs';
 
 
+
 @Component({
   selector: 'app-chat-screen',
   templateUrl: './chat-screen.component.html',
@@ -239,18 +240,19 @@ export class GroupMessagesComponent implements OnInit {
       members: userArray,
     })
   }
-  removeMember: any = [];
+
   //update group
   updateGroup(member: any) {
-    //this.removeMember =this.currentGrpMembers.filter((eachGrpMember:any)=>eachGrpMember!==member);
-    console.log(this.removeMember)
     const groupRef = collection(this.fireStore, 'oc-group')
     const groupDocRef = doc(groupRef, this.selectedGroupName)  //group name which has to be upadated is to be passed here
     updateDoc(groupDocRef, {
       members: this.currentGrpMembers.filter((eachGrpMember: any) => eachGrpMember !== member)  //new user array to be passed....
     }).then(() => this.getmyGroups());
   }
-
+/**
+ * 
+ * @param delete group from lists after click on delete(...) icon
+ */
   deleteGroup(selectedGrpName: any) {
      const match= this.chatGroups.find((eachGrp:any)=>eachGrp.name == selectedGrpName);
      if(match && match.createdBy == this.loggedInUser){
@@ -260,7 +262,18 @@ export class GroupMessagesComponent implements OnInit {
      }else{
       alert("msg")
      }
-
-   
+  }
+/**
+ * 
+ * @param user add people
+ */
+  addPeople(){
+    let addP=this.userLists.find((eachGrpMember: any) => eachGrpMember == this.userSelects) ;
+    console.log(addP)
+    const groupRef = collection(this.fireStore, 'oc-group')
+    const groupDocRef = doc(groupRef, this.selectedGroupName)  //group name which has to be upadated is to be passed here
+    updateDoc(groupDocRef, {
+      members: [...this.currentGrpMembers,this.userLists.find((eachGrpMember: any) => eachGrpMember == this.userSelects)]  //new user array to be passed....
+    }).then(() => this.getAllUsers());
   }
 }
